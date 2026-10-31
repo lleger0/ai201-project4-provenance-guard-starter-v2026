@@ -38,8 +38,19 @@
 
 <!-- The path a submission takes, from arriving to the label a reader sees.
      Six or seven steps — this is the trace you wrote in Milestone 1. -->
-
-
+<!-- detector.model_signal
+stylometry.style_signal(text) - like what is stylometry?
+scoring.combine_signals(...)
+scoring.score_to_label(...)
+Audit
+Go through stylometry, detector -->
+This is what the model will do step by step.
+1. Recieve the text
+2. Use detector.py - Determine how much AI - model score - perplexity score - judges whether the next word is predictable
+3. Use Stlyometry. see the sentence spread, punctuation
+4. Combine detector and stylometry into a confidence score
+5. Using the confidence score, label.
+6. Audit the results
 
 ---
 
@@ -53,36 +64,60 @@
 
 ### Signal one — the model signal
 
-**What it measures:**
+**What it measures:** This measures perplexity which means how likely each word is. The AI asks itself if it could have written the text.
 
-**Why that might differ between human and AI writing:**
+**Why that might differ between human and AI writing:** Humans are more likely to be unpredictable when they are writing. Often so they might use a word or phrase that an AI wouldn't even think of using.
 
-**What it can't see:**
+**What it can't see:** If a human decides to write simplistically, it can be mistake for AI. The other issue is if an AI is instructured to use rare words in its generation. In that case the perplexity score would score it as human even though its not.
 
 ### Signal two — the style signal
 
-**What it measures:**
+**What it measures:** The style measure sentence length spread, type token ratio (how much of the vocabulary repeats), and punctuation density. It is not capable of reading the text but is instead grading it based on sentence structue.
 
-**Why that might differ between human and AI writing:**
+**Why that might differ between human and AI writing:** Human writing is unpredictable. A human could have a 3 word sentence next to a 40 word sentence in one pareagraph of text. AI would write in a more structured fashion.
 
-**What it can't see:**
+**What it can't see:** Since it cannot read, if the sentence structure makes it thinks that it is AI that is what it will set it as. Even if the text has typos, direct quotes from other sources, etc, that will not change its verdict.
 
 ### The combining rule
 
 <!-- Write the rule in words, then give the numbers. What happens when the two
-     signals disagree? -->
+     signals disagree? 
+     
+     My Thoughts:
 
-**The rule:**
+     If one of the signals is really high then the text should be labeled as AI.
+     Really high would mean a score of over 0.8. Like I think that if one of them is high then that would mean that maybe they see somethign the other one doesn't see.
 
-**The numbers:**
+     If both scores are high then that is 100% AI
+
+     But maybe in the end just taking the average is still the better option?
+     How do I accurately combine the scores?
+
+     Maybe if one score is high then that score could be weighted?
+     so like (low +high.0.5)//2 ?
+
+     But what I just sait values the AI accusation more.....
+     I want to weight towards the human guess. I don't want to falsely accuse humans of AI
+
+     For now the numbers will 0.7 and 0.3
+     Maybe later I'll change them to 0.6 and 0.4
+
+     
+     -->
+
+**The rule:** The combining score will lean towards a human verdict. Which ever signal has the more human verdict will recieve the weight.
+
+**The numbers:** The number that leans human will have a weight of 0.7. The number that leans towards AI will have a weight of 0.3.
 
 **Where it lives:** `scoring.py::combine_signals`
 
 <!-- ⚠️ The grader checks your code against that line. If your rule lives
      somewhere else, say where. -->
 
-**A case where my two signals split, and what my rule does with it:**
+**A case where my two signals split, and what my rule does with it:** My rule will apply the heavier weight to the signal that leans towards the human verdict.
 
+Input: Model Signal, Style Signal 
+Output: Combining Signal
 
 
 ---
