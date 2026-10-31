@@ -41,62 +41,75 @@ Two things worth knowing before you pick numbers:
   differently twice. A target of "at most 1 in 10" against trials of 2, 1, 2 is
   a **miss**.
 
+  <!-- I'm assuming that each test will be one text that will be run 3 times. 
+  
+      But it is 10 pieces of writings. So I should write criteria regarding that number as well.
+
+      Will all 10 pieces be human written 
+
+      So I think all 10 is human written so all the tests will be against human text.
+      Is that a fair way to test this model though? Should it also be tested with AI generated text?
+
+      I'm not sure how tohe appeal system would work.....
+  
+  -->
+
 ---
-## 1.
+## 1. At most only 2/10 of my written writings will be labeled as AI
 
 <!-- Your criterion. It must name a number. -->
 
 
 
-**Why this target:**
+**Why this target:** I want my model to prevent false positives. I'll allow 2 false positives in case of error. This means that the model should have a rate of being 80% correnct.
 
 
 
 ---
 
-## 2.
+## 2. An AI text should be labeled AI in 2/3 tries.
 
-<!-- Your criterion. -->
-
-
-
-**Why this target:**
+<!-- Your criterion. --> 
 
 
 
----
-
-## 3.
-
-<!-- Your criterion. -->
-
-
-
-**Why this target:**
+**Why this target:**  This is to ensure the model correctly labels an AI text as AI most of the time
 
 
 
 ---
 
-## 4.
+## 3. Properly handles invalid inputs in 3/3 tries
 
 <!-- Your criterion. -->
 
 
 
-**Why this target:**
+**Why this target:** This is to ensure that invalid inputs such as empty text is not accepted as input.
 
 
 
 ---
 
-## 5.
+## 4. Appeals changes label of a post to under review.
 
 <!-- Your criterion. -->
 
 
 
-**Why this target:**
+**Why this target:** This is to ensure that the appeal function is working properly. 
+
+
+
+---
+
+## 5. All labels are reachable. 
+
+<!-- Your criterion. -->
+
+
+
+**Why this target:** This is to ensure that mislabeling is not occurring due to no access to a label.
 
 
 
