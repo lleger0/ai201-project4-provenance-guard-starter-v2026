@@ -156,6 +156,8 @@ Output: Combining Signal
      two off the response, so leaving them out costs you next unit's
      diagnostics. -->
 
+Before building stylometry
+
 ```bash
 $ curl -X POST http://127.0.0.1:5000/submit \
   -H "Content-Type: application/json" \
@@ -163,6 +165,15 @@ $ curl -X POST http://127.0.0.1:5000/submit \
 ```
 
 ```json
+{
+  "confidence": 0.3092,
+  "content_id": "hardcoded",
+  "creator_id": "me",
+  "guess": "unsure",
+  "label": "not built yet",
+  "model_score": 0.3092,
+  "style_score": null
+}
 
 ```
 
