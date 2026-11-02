@@ -225,7 +225,7 @@ def submit():
         creator_id = creator_id,
         model_score = model_score,
         style_score = style_score,
-        combined_score= combined,
+        confidence = combined,
         status="decided",
     )
 
@@ -242,11 +242,10 @@ def submit():
         "content_id": "hardcoded",
         "creator_id":creator_id,
         "guess": "unsure",
-        "confidence": model_score,
+        "confidence": combined,
         "label":"not built yet",
         "model_score": model_score,
         "style_score":style_score,
-        "combined_score":combined,
     }), 200
 
 
