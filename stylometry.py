@@ -65,7 +65,44 @@ def sentence_length_spread(text: str) -> float:
     before the attack set decides for you.
     """
     # TODO: replace this
-    return 0.0
+
+    # Thought process
+    # maybe use a for loop to iterate through each sentence and 
+    # obtain the length? should the length be in characters or words? It is in words.
+    # sentences() and words() are given to split into sentences and words
+
+    lengths = []
+    for i in sentences(text):
+        lengths.append(len(words(i)))
+
+    # This only works when there is more than once sentence. I'll have 
+    # to do research on standard deviation and variance
+
+   
+    # according to google the standard deviation of a single number is 0 since it doesn't deviate
+
+    if len(lengths) == 1:
+        return 0
+
+    # standard deviation = expressed in the same unit as the data. variation of values from the mean
+    # low standard deviation means values are close to the average
+
+    # my example: "In the event where you have to test a certain amount of text, I ask you to think and wonder to yourself: Was this written by a human or AI? Now let me add another sentence."
+    # one sentence is 30, the other is 6. the standard deviation is 16.97
+
+    # if an input only has one sentence then standard deviation shouldn't be used to determine if its AI.
+    
+    # the lower the standard deviation, the more likely it's AI
+    mean = statistics.mean(lengths)
+    #print(mean)
+    # I think i'll have to compare the standard deviation to the mean to decide if its high right?
+    # or should i technically do that right now?
+    #print("Standard Deviation / mean")
+    #print(statistics.stdev(lengths)/mean) # I think i could return this... It makes sense... I just have to look at the instructions again to make sure.
+    return (statistics.stdev(lengths)/mean)
+    return(statistics.stdev(lengths))
+    
+    #return 0.0
 
 
 def type_token_ratio(text: str) -> float:
@@ -81,7 +118,30 @@ def type_token_ratio(text: str) -> float:
     that alone can look like a signal.
     """
     # TODO: replace this
-    return 0.0
+
+    # unique words over total words
+    # make a list or dictionary of common words 
+    # common words / total words 
+    # 1 - common words / total words = percentage of unique words.
+
+    # another strat could be.... instead of counting the common words i could count the uncommon words then divide that by the total words
+
+    # words are already in lower case
+    #for word in words(text):
+    from words import get_common_words
+
+    common = get_common_words()
+    count = 0
+     
+    for w in words(text.lower()):
+        # time complexity wise.... isn't finding a word better than checking if a word is not somewhere?
+        if w in common:
+            count +=1
+
+    # the higher amount of uncommon words, the more likely its human
+    return 1 - (count/ len(words(text))) # should be the percentage of unique words
+
+    #return 0.0
 
 
 def punctuation_density(text: str) -> float:
@@ -95,7 +155,22 @@ def punctuation_density(text: str) -> float:
         writers.
     """
     # TODO: replace this
-    return 0.0
+
+    #print(sentences(text)) # punction is included in sentences.
+    
+    punc = (re.findall(r"[^\w\s^.]+",text))
+    char_count = 0
+
+    for sentence in sentences(text):
+        #punc.append(re.findall(r"[^\w\s]+",sentence))
+        for character in sentence:
+            char_count +=1
+            
+    #print(len(punc))
+    #print(char_count)
+    # so what does this score mean? - I guess I would say that perhaps AI is more likely to use more punction. So the higher the score the more likely its AI
+    # to be honest let me exclude periods because everybody has to use a period. # like what amount of period usage would be above average? 
+    return len(punc)/char_count
 
 
 # ── Combining them ───────────────────────────────────────────────────────────
@@ -123,7 +198,13 @@ def style_signal(text: str) -> float:
     to signal one, and it is plain writing that gets accused.
     """
     # TODO: replace this
-    return 0.5
+    # sentence spread should get flipped
+    spread = 1-sentence_length_spread(text)
+    uniqueness = 1-type_token_ratio(text)
+    # I'm going to say that humans have higher punctuation density because an AI is more likely to make it's sentences longer
+    punc_density = 1- punctuation_density(text)
+    return (spread + uniqueness + punc_density)/ 3
+    #return 0.5
 
 
 if __name__ == "__main__":
