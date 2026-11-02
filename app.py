@@ -210,12 +210,22 @@ def submit():
     import detector
     model_score = detector.model_signal(text)
 
+    # Step 5
+    import stylometry
+    style_score = stylometry.style_signal(text)
+
+    # Step 6
+    import scoring
+    combined = scoring.combine_signals(model_score,style_score)
+
     #Stpe 4 - log the decision. The content_id is what /appeal needs later
     content_id = f"c_{uuid.uuid4().hex[:12]}"
     audit.log_decision(
         content_id = content_id,
         creator_id = creator_id,
         model_score = model_score,
+        style_score = style_score,
+        combined_score= combined,
         status="decided",
     )
 
@@ -235,7 +245,8 @@ def submit():
         "confidence": model_score,
         "label":"not built yet",
         "model_score": model_score,
-        "style_score":None,
+        "style_score":style_score,
+        "combined_score":combined,
     }), 200
 
 

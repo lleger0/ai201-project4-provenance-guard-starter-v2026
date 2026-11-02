@@ -53,10 +53,16 @@ def combine_signals(model_score: float, style_score: float) -> float:
     write a different rule.
     """
     # TODO: replace this
+
+    # what do i do if they're equal?
+
+    if model_score < style_score:
+        return (model_score * config.HEAVY_WEIGHT_SIGNAL + style_score*config.LIGHT_WEIGHT_SIGNAL)/2
+    elif style_score < model_score:
+        return (style_score * config.HEAVY_WEIGHT_SIGNAL + model_score*config.LIGHT_WEIGHT_SIGNAL)
     return (
         config.WEIGHT_MODEL_SIGNAL * model_score
-        + config.WEIGHT_STYLE_SIGNAL * style_score
-    )
+        + config.WEIGHT_STYLE_SIGNAL * style_score)/2
 
 
 def score_to_label(score: float) -> tuple[str, str]:
