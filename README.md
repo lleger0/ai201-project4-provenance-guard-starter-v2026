@@ -35,7 +35,7 @@
 <!-- ═══════════════════════ UNIT 7 — THE BUILD ═══════════════════════ -->
 
 ## What This Does
-
+This is a system that labels a piece of text as written by AI, human, or unsure.
 <!-- The path a submission takes, from arriving to the label a reader sees.
      Six or seven steps — this is the trace you wrote in Milestone 1. -->
 <!-- detector.model_signal
