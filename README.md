@@ -131,14 +131,16 @@ Output: Combining Signal
 
 | Label | Score range | The exact text a reader sees |
 |---|---|---|
-| high-confidence human |  |  |
-| unsure |  |  |
-| high-confidence AI |  |  |
+| high-confidence human | 0.0- 0.4 | This text was written by a human.  |
+| unsure | 0.4-0.6 | It is unclear whether this text was written by a human or AI |
+| high-confidence AI | 0.6 - 1 | This was definitely written by an AI. |
 
 **Why I worded the "unsure" one this way:**
 <!-- It's the hardest of the three. It has to admit uncertainty without
      sounding like an accusation, because the person reading it may well have
      written every word themselves. -->
+
+I've decided to write this in plain english. The way I worded it leaves no room for bias nor accusation.
 
 
 
@@ -186,7 +188,17 @@ $ curl -X POST http://127.0.0.1:5000/appeal \
 ```
 
 ```json
-
+{
+  "evidence": {
+    "content_id": "c_2d2ae002675a",
+    "creator_id": "demo_instructor",
+    "event": "appeal",
+    "reasoning": "I dont remember but Im pretty sure its human",
+    "status": "under_review",
+    "timestamp": "2026-11-02T04:16:56+00:00"
+  },
+  "message": "Your appeal has been entered."
+}
 ```
 
 **What the log shows afterwards**
@@ -196,12 +208,36 @@ $ curl "http://127.0.0.1:5000/log?limit=3"
 ```
 
 ```json
-
+ {
+      "combined_score": null,
+      "confidence": 0.20544225836726754,
+      "content_id": "c_2d2ae002675a",
+      "creator_id": "demo_instructor",
+      "guess": null,
+      "label": [
+        "high-confidence human",
+        "This text was written by a human."
+      ],
+      "model_score": 0.2782,
+      "status": "decided",
+      "style_score": 0.7204817224484503,
+      "timestamp": "2026-11-02T02:23:58+00:00"
+    },
+    {
+      "content_id": "c_2d2ae002675a",
+      "creator_id": "demo_instructor",
+      "event": "appeal",
+      "reasoning": "I dont remember but Im pretty sure its human",
+      "status": "under_review",
+      "timestamp": "2026-11-02T04:16:56+00:00"
+    },
 ```
 
 ---
 
 ## How I Used AI
+
+I did not use AI for this unit.
 
 **Moment 1**
 

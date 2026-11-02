@@ -217,6 +217,9 @@ def submit():
     # Step 6
     import scoring
     combined = scoring.combine_signals(model_score,style_score)
+    # Step 8
+    label = scoring.score_to_label(combined)
+    
 
     #Stpe 4 - log the decision. The content_id is what /appeal needs later
     content_id = f"c_{uuid.uuid4().hex[:12]}"
@@ -226,6 +229,7 @@ def submit():
         model_score = model_score,
         style_score = style_score,
         confidence = combined,
+        label = label,
         status="decided",
     )
 
@@ -243,7 +247,7 @@ def submit():
         "creator_id":creator_id,
         "guess": "unsure",
         "confidence": combined,
-        "label":"not built yet",
+        "label":label,
         "model_score": model_score,
         "style_score":style_score,
     }), 200
@@ -281,13 +285,37 @@ def appeal():
     wrong accusation and nothing at all.
     """
     payload = request.get_json(silent=True) or {}
+    content_id = payload.get("content_id")
+    reasoning = payload.get("reasoning", "unknown") # this might need to be changed
 
-    # TODO: delete this and build the route.
+    import audit
+    # step 1
+    if not audit.entries_for(content_id):
+        return jsonify({
+                "error": "content_id invalid",
+                "message": "content_id not found in logs",
+                "you_sent": payload,
+            }), 400
+
+    # Step 2
+
+    #print(audit.entries_for(content_id))
+    audit.log_appeal(content_id, audit.entries_for(content_id)[0]["creator_id"], reasoning )
+
+    # Step 3
     return jsonify({
-        "error": "not_implemented",
-        "message": "POST /appeal isn't built yet — see the TODO in app.py.",
-        "you_sent": payload,
-    }), 501
+        "message": "Your appeal has been entered.",
+        "confirmation": audit.entries_for(content_id)[1],
+    }), 200
+
+    # is 400 bad request? whats 501. 501 literally means not implemented :) 
+    # TODO: delete this and build the route.
+    # return jsonify({
+    #     "error": "not_implemented",
+    #     "message": "POST /appeal isn't built yet — see the TODO in app.py.",
+    #     "you_sent": payload,
+    #     "creator_id": audit.entries_for(content_id)[0]["creator_id"],
+    # }), 501
 
 
 # ── Already works ─────────────────────────────────────────────────────────────
